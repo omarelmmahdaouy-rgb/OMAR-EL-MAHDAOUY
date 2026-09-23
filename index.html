@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قاعدة البيانات ونظام الإدارة الشخصي - عمر المهداوي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="patterned-bg">
+
+    <!-- 1. واجهة تسجيل الدخول المزدوجة -->
+    <div id="login-screen" class="login-wrapper">
+        <div class="login-card-split">
+            
+            <!-- الجانب الأيسر البصري والزخرفي -->
+            <div class="login-left-banner">
+                <div class="brand-badge">
+                    <div class="badge-logo-icon">★</div>
+                    <div class="badge-text">OMAR EL MAHDAOUI</div>
+                </div>
+                <div class="banner-content">
+                    <h1>BASS DONNE</h1>
+                    <p class="banner-subtitle">Smarter Control System.</p>
+                </div>
+                <div class="geo-circle circle-1"></div>
+                <div class="geo-circle circle-2"></div>
+            </div>
+
+            <!-- الجانب الأيمن الاستمارة -->
+            <div class="login-right-form">
+                <h2 class="welcome-title">Welcome Back!</h2>
+                
+                <form id="login-form" onsubmit="return false;">
+                    <div class="form-group-modern">
+                        <label for="login-username">اسم المستخدم أو البريد الإلكتروني</label>
+                        <input type="text" id="login-username" placeholder="Enter your username or email" required autocomplete="username">
+                    </div>
+                    <div class="form-group-modern">
+                        <label for="login-password">كلمة المرور</label>
+                        <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password">
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" id="remember-check">
+                            <span>تذكرني</span>
+                        </label>
+                    </div>
+
+                    <button type="button" id="login-btn-submit" class="btn-modern-login">Login</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 2. اللوحة الرئيسية للنظام -->
+    <div id="app-dashboard" class="app-layout hidden">
+        
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="avatar-container">
+                    <img id="sidebar-avatar" class="avatar-circle hidden" src="" alt="الصورة الشخصية">
+                    <div id="sidebar-avatar-placeholder" class="avatar-placeholder">👤</div>
+                </div>
+                <h3 id="side-fullname">عمر المهداوي</h3>
+                <p id="side-job">طالب / مستخدم</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="home">🏠 الصفحة الرئيسية</button>
+                <button class="nav-btn" data-tab="db">📂 قاعدة البيانات</button>
+                <button class="nav-btn" data-tab="study">🎓 اللوحة الدراسية</button>
+                <button class="nav-btn" data-tab="files">📄 الملفات والوثائق</button>
+                <button class="nav-btn" data-tab="settings">⚙️ الحساب والإعدادات</button>
+                <button class="nav-btn danger" id="logout-btn">🚪 تسجيل الخروج</button>
+            </nav>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <header class="top-header patterned-header">
+                <h2>قاعدة بيانات عمر المهداوي</h2>
+                <div class="header-user">
+                    <span id="header-fullname">عمر المهداوي</span>
+                    <img id="header-avatar" class="avatar-mini hidden" src="" alt="avatar">
+                    <div id="header-avatar-placeholder" class="avatar-mini-placeholder">👤</div>
+                </div>
+            </header>
+
+            <!-- الصفحة الرئيسية -->
+            <section id="sec-home" class="content-section active">
+                <div class="welcome-card patterned-card">
+                    <div class="profile-main-img-box">
+                        <img id="dash-profile-img" class="avatar-large hidden" src="" alt="Profile">
+                        <div id="dash-avatar-placeholder" class="avatar-large-placeholder">👤</div>
+                    </div>
+                    <div>
+                        <h2>مرحباً بك، <span id="dash-welcome-name">عمر المهداوي</span></h2>
+                        <p>لوحة التحكم والإدارة الشاملة للبيانات الشخصية والأكاديمية.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h3>📌 البطاقة التعريفية والمعلومات الأساسية</h3>
+                        <button class="btn btn-secondary" id="print-full-btn">🖨️ طباعة تقرير قاعدة البيانات</button>
+                    </div>
+                    <div id="dash-details-grid" class="details-grid"></div>
+                </div>
+            </section>
+
+            <!-- قسم قاعدة البيانات -->
+            <section id="sec-db" class="content-section">
+                <div class="section-header">
+                    <h3>📂 قاعدة البيانات الشخصية</h3>
+                    <button class="btn btn-primary" onclick="openModal('add-db-modal')">➕ إضافة معلومات</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>العنوان</th>
+                                <th>التصنيف</th>
+                                <th>الوصف</th>
+                                <th>الملف المرفق</th>
+                                <th>تاريخ الإضافة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="db-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- قسم الدراسة -->
+            <section id="sec-study" class="content-section">
+                <div class="card study-info-header patterned-card">
+                    <div class="uni-logo-box">
+                        <img id="study-uni-logo" class="uni-logo-img hidden" src="" alt="Logo">
+                        <div id="study-logo-placeholder" class="uni-logo-placeholder">🎓</div>
+                    </div>
+                    <div id="study-uni-details">
+                        <h3>🎓 معلومات الدراسة والجامعة</h3>
+                        <p>قم بإدخال بيانات الجامعة والكلية من قسم الإعدادات لتظهر هنا تلقائياً.</p>
+                    </div>
+                </div>
+
+                <div class="section-header" style="margin-top:20px;">
+                    <h4>📚 المواد الدراسية ونسب المراجعة</h4>
+                    <button class="btn btn-primary" onclick="openModal('add-subject-modal')">➕ إضافة مادة دراسية</button>
+                </div>
+                <div id="subjects-container" class="cards-grid"></div>
+            </section>
+
+            <!-- قسم الملفات والوثائق -->
+            <section id="sec-files" class="content-section">
+                <div class="section-header">
+                    <h3>📄 إدارة الوثائق والملفات الرسمية</h3>
+                    <button class="btn btn-primary" onclick="openModal('add-file-modal')">➕ إضافة وثيقة</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>اسم الوثيقة</th>
+                                <th>نوع الملف</th>
+                                <th>التصنيف</th>
+                                <th>تاريخ الإضافة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="files-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- الحساب والإعدادات -->
+            <section id="sec-settings" class="content-section">
+                <h3>⚙️ الحساب والإعدادات</h3>
+                <form id="settings-form">
+                    <div class="card form-section-card">
+                        <h4>🔐 بيانات الدخول والأمان</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>اسم المستخدم / البريد</label><input type="text" id="set-username" required></div>
+                            <div class="form-group"><label>كلمة المرور الجديدة</label><input type="password" id="set-new-pass" placeholder="اتركها فارغة للتعديل"></div>
+                            <div class="form-group"><label>تأكيد كلمة المرور الجديدة</label><input type="password" id="set-confirm-pass" placeholder="تأكيد كلمة المرور"></div>
+                        </div>
+                    </div>
+
+                    <div class="card form-section-card">
+                        <h4>🖼️ الصورة الشخصية</h4>
+                        <div class="file-upload-box">
+                            <div class="preview-square">
+                                <img id="settings-avatar-preview" class="hidden" src="" alt="Preview">
+                                <span id="settings-avatar-ph">👤</span>
+                            </div>
+                            <div class="upload-controls">
+                                <label class="btn btn-primary btn-file">
+                                    📁 اختيار صورة من الجهاز
+                                    <input type="file" id="avatar-input" accept="image/*" style="display:none;">
+                                </label>
+                                <button type="button" class="btn btn-danger" id="remove-avatar-btn">حذف الصورة</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card form-section-card">
+                        <h4>👤 البيانات الشخصية الشاملة</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>الاسم الكامل</label><input type="text" id="set-fullname"></div>
+                            <div class="form-group"><label>الاسم بالفرنسية</label><input type="text" id="set-fullname-fr"></div>
+                            <div class="form-group"><label>تاريخ الازدياد</label><input type="date" id="set-dob"></div>
+                            <div class="form-group"><label>مكان الازدياد</label><input type="text" id="set-pob"></div>
+                            <div class="form-group"><label>السن</label><input type="text" id="set-age" readonly></div>
+                            <div class="form-group"><label>الجنسية</label><input type="text" id="set-nationality"></div>
+                            <div class="form-group"><label>الحالة العائلية</label><input type="text" id="set-marital"></div>
+                            <div class="form-group"><label>رقم البطاقة الوطنية (CIN)</label><input type="text" id="set-cin"></div>
+                            <div class="form-group"><label>المهنة الحالية</label><input type="text" id="set-job"></div>
+                            <div class="form-group"><label>رقم الهاتف</label><input type="text" id="set-phone"></div>
+                            <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="set-email"></div>
+                            <div class="form-group"><label>العنوان</label><input type="text" id="set-address"></div>
+                            <div class="form-group"><label>المدينة</label><input type="text" id="set-city"></div>
+                            <div class="form-group full-width"><label>الملاحظات</label><textarea id="set-notes" rows="2"></textarea></div>
+                        </div>
+                    </div>
+
+                    <div class="card form-section-card">
+                        <h4>🎓 المعلومات الدراسية والجامعية</h4>
+                        <div class="form-grid">
+                            <div class="form-group"><label>اسم الجامعة</label><input type="text" id="set-university"></div>
+                            <div class="form-group"><label>اسم الكلية</label><input type="text" id="set-faculty"></div>
+                            <div class="form-group"><label>الشعبة</label><input type="text" id="set-department"></div>
+                            <div class="form-group"><label>المسلك / التخصص</label><input type="text" id="set-major"></div>
+                            <div class="form-group"><label>المستوى الدراسي</label><input type="text" id="set-level"></div>
+                            <div class="form-group"><label>السنة الجامعية</label><input type="text" id="set-academic-year"></div>
+                        </div>
+                        <hr style="margin: 15px 0; border:0; border-top:1px solid #e2e8f0;">
+                        <h5>شعار الكلية / الجامعة</h5>
+                        <div class="file-upload-box">
+                            <div class="preview-square">
+                                <img id="settings-unilogo-preview" class="hidden" src="" alt="Preview">
+                                <span id="settings-unilogo-ph">🎓</span>
+                            </div>
+                            <div class="upload-controls">
+                                <label class="btn btn-primary btn-file">
+                                    📁 اختيار شعار من الجهاز
+                                    <input type="file" id="unilogo-input" accept="image/*" style="display:none;">
+                                </label>
+                                <button type="button" class="btn btn-danger" id="remove-unilogo-btn">حذف الشعار</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; font-size:16px;">💾 حفظ كافة التغييرات</button>
+                </form>
+            </section>
+
+            <!-- أسفل الموقع الصريح والمحدد -->
+            <footer class="app-site-footer">
+                <p>المملكة المغربية — قاعدة بيانات عمر المهداوي © 2026</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="add-db-modal" class="modal">
+        <div class="modal-content">
+            <h3>➕ إضافة معلومة لقاعدة البيانات</h3>
+            <form id="add-db-form">
+                <div class="form-group"><label>العنوان</label><input type="text" id="db-title" required></div>
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="db-cat">
+                        <option value="شخصي">شخصي</option>
+                        <option value="دراسة">دراسة</option>
+                        <option value="عمل">عمل</option>
+                        <option value="وثائق">وثائق</option>
+                        <option value="مالية">مالية</option>
+                        <option value="أخرى">أخرى</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>وصف مختصر</label><input type="text" id="db-desc"></div>
+                <div class="form-group"><label>المعلومات التفصيلية</label><textarea id="db-details" rows="3"></textarea></div>
+                <div class="form-group"><label>التاريخ</label><input type="date" id="db-date" required></div>
+                <div class="form-group"><label>الملف المرفق من الجهاز</label><input type="file" id="db-file-input"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('add-db-modal')">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ السجل</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="add-subject-modal" class="modal">
+        <div class="modal-content">
+            <h3>➕ إضافة مادة دراسية</h3>
+            <form id="add-subject-form">
+                <div class="form-group"><label>اسم المادة</label><input type="text" id="sub-title" required></div>
+                <div class="form-group"><label>الأستاذ المشرف</label><input type="text" id="sub-prof"></div>
+                <div class="form-group"><label>السنة / الفصل</label><input type="text" id="sub-year"></div>
+                <div class="form-group"><label>نسبة المراجعة (%)</label><input type="number" id="sub-progress" min="0" max="100" value="0"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('add-subject-modal')">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ المادة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="add-file-modal" class="modal">
+        <div class="modal-content">
+            <h3>➕ إضافة وثيقة جديدة</h3>
+            <form id="add-file-form">
+                <div class="form-group"><label>اسم الوثيقة</label><input type="text" id="file-title" required></div>
+                <div class="form-group">
+                    <label>نوع الملف</label>
+                    <select id="file-type">
+                        <option value="PDF">PDF</option>
+                        <option value="صورة">صورة</option>
+                        <option value="Word">Word</option>
+                        <option value="وثيقة إدارية">وثيقة إدارية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="file-cat">
+                        <option value="دراسة">دراسة</option>
+                        <option value="عمل">عمل</option>
+                        <option value="شخصية">شخصية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>اختر الوثيقة من جهاز الكمبيوتر</label>
+                    <input type="file" id="file-upload-input" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('add-file-modal')">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">رفع وحفظ الوثيقة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content danger-modal">
+            <h3>⚠️ تأكيد الحذف</h3>
+            <p>هل أنت متأكد من أنك تريد حذف هذه المعلومة نهائياً؟</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('confirm-modal')">إلغاء</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">حذف</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- حاوية طباعة التقارير (مخفية بشكل مطلق من العرض العادي) -->
+    <div id="print-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
