@@ -5,31 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>قاعدة البيانات ونظام الإدارة الشخصي - عمر المهداوي</title>
     <link rel="stylesheet" href="style.css">
+    <!-- مكتبة تصدير ملفات Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
-<body class="patterned-bg">
+<body class="custom-bg">
 
-    <!-- 1. واجهة تسجيل الدخول المزدوجة -->
+    <!-- ترويسة الطباعة الرسمية -->
+    <div id="print-container"></div>
+
+    <!-- 1. واجهة تسجيل الدخول -->
     <div id="login-screen" class="login-wrapper">
         <div class="login-card-split">
-            
-            <!-- الجانب الأيسر البصري والزخرفي -->
             <div class="login-left-banner">
                 <div class="brand-badge">
                     <div class="badge-logo-icon">★</div>
                     <div class="badge-text">OMAR EL MAHDAOUI</div>
                 </div>
                 <div class="banner-content">
-                    <h1>BASS DONNE</h1>
+                    <h1>BASE DONNÉE</h1>
                     <p class="banner-subtitle">Smarter Control System.</p>
                 </div>
                 <div class="geo-circle circle-1"></div>
                 <div class="geo-circle circle-2"></div>
             </div>
 
-            <!-- الجانب الأيمن الاستمارة -->
             <div class="login-right-form">
                 <h2 class="welcome-title">Welcome Back!</h2>
-                
                 <form id="login-form" onsubmit="return false;">
                     <div class="form-group-modern">
                         <label for="login-username">اسم المستخدم أو البريد الإلكتروني</label>
@@ -39,47 +40,24 @@
                         <label for="login-password">كلمة المرور</label>
                         <input type="password" id="login-password" placeholder="Enter your password" required autocomplete="current-password">
                     </div>
-                    
                     <div class="form-options">
                         <label class="remember-me">
-                            <input type="checkbox" id="remember-check">
+                            <input type="checkbox" id="remember-check" checked>
                             <span>تذكرني</span>
                         </label>
                     </div>
-
                     <button type="button" id="login-btn-submit" class="btn-modern-login">Login</button>
                 </form>
             </div>
-
         </div>
     </div>
 
     <!-- 2. اللوحة الرئيسية للنظام -->
     <div id="app-dashboard" class="app-layout hidden">
-        
-        <!-- الشريط الجانبي -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="avatar-container">
-                    <img id="sidebar-avatar" class="avatar-circle hidden" src="" alt="الصورة الشخصية">
-                    <div id="sidebar-avatar-placeholder" class="avatar-placeholder">👤</div>
-                </div>
-                <h3 id="side-fullname">عمر المهداوي</h3>
-                <p id="side-job">طالب / مستخدم</p>
-            </div>
-            <nav class="sidebar-nav">
-                <button class="nav-btn active" data-tab="home">🏠 الصفحة الرئيسية</button>
-                <button class="nav-btn" data-tab="db">📂 قاعدة البيانات</button>
-                <button class="nav-btn" data-tab="study">🎓 اللوحة الدراسية</button>
-                <button class="nav-btn" data-tab="files">📄 الملفات والوثائق</button>
-                <button class="nav-btn" data-tab="settings">⚙️ الحساب والإعدادات</button>
-                <button class="nav-btn danger" id="logout-btn">🚪 تسجيل الخروج</button>
-            </nav>
-        </aside>
 
-        <!-- المحتوى الرئيسي -->
+        <!-- محتوى الصفحة الأساسي -->
         <main class="main-content">
-            <header class="top-header patterned-header">
+            <header class="top-header">
                 <h2>قاعدة بيانات عمر المهداوي</h2>
                 <div class="header-user">
                     <span id="header-fullname">عمر المهداوي</span>
@@ -90,7 +68,7 @@
 
             <!-- الصفحة الرئيسية -->
             <section id="sec-home" class="content-section active">
-                <div class="welcome-card patterned-card">
+                <div class="welcome-card">
                     <div class="profile-main-img-box">
                         <img id="dash-profile-img" class="avatar-large hidden" src="" alt="Profile">
                         <div id="dash-avatar-placeholder" class="avatar-large-placeholder">👤</div>
@@ -104,7 +82,7 @@
                 <div class="card">
                     <div class="card-header-flex">
                         <h3>📌 البطاقة التعريفية والمعلومات الأساسية</h3>
-                        <button class="btn btn-secondary" id="print-full-btn">🖨️ طباعة تقرير قاعدة البيانات</button>
+                        <button class="btn btn-secondary" id="print-full-btn" onclick="printReport()">🖨️ طباعة تقرير قاعدة البيانات</button>
                     </div>
                     <div id="dash-details-grid" class="details-grid"></div>
                 </div>
@@ -125,7 +103,7 @@
                                 <th>الوصف</th>
                                 <th>الملف المرفق</th>
                                 <th>تاريخ الإضافة</th>
-                                <th>الإجراءات</th>
+                                <th style="text-align:center;">الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody id="db-table-body"></tbody>
@@ -133,16 +111,35 @@
                 </div>
             </section>
 
-            <!-- قسم الدراسة -->
+            <!-- قسم Excel المدمج -->
+            <section id="sec-excel" class="content-section">
+                <div class="section-header">
+                    <h3>📊 جدول البيانات الحسابي (Excel)</h3>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="addExcelRow()">➕ إضافة صف</button>
+                        <button class="btn btn-primary" onclick="addExcelCol()">➕ إضافة عمود</button>
+                        <button class="btn btn-success" onclick="saveExcelData()">💾 حفظ التغييرات</button>
+                        <button class="btn btn-secondary" onclick="exportExcelCSV()">📥 تصدير كـ Excel</button>
+                    </div>
+                </div>
+                <div class="card" style="padding:15px; overflow-x:auto;">
+                    <div class="excel-toolbar" style="margin-bottom:10px;">
+                        <span style="font-size:13px; color:#666;">يمكنك تعديل البيانات مباشرة بالجدول والضغط على حفظ لتبقى محفوطة دائماً:</span>
+                    </div>
+                    <table class="excel-grid" id="excel-grid-table"></table>
+                </div>
+            </section>
+
+            <!-- قسم اللوحة الدراسية -->
             <section id="sec-study" class="content-section">
-                <div class="card study-info-header patterned-card">
+                <div class="card study-info-header">
                     <div class="uni-logo-box">
                         <img id="study-uni-logo" class="uni-logo-img hidden" src="" alt="Logo">
                         <div id="study-logo-placeholder" class="uni-logo-placeholder">🎓</div>
                     </div>
-                    <div id="study-uni-details">
-                        <h3>🎓 معلومات الدراسة والجامعة</h3>
-                        <p>قم بإدخال بيانات الجامعة والكلية من قسم الإعدادات لتظهر هنا تلقائياً.</p>
+                    <div id="study-uni-details" style="flex:1;">
+                        <h3 style="color:var(--primary-blue); margin-bottom:10px;">🎓 معلومات الدراسة والجامعة</h3>
+                        <div id="study-details-grid" class="details-grid"></div>
                     </div>
                 </div>
 
@@ -153,7 +150,7 @@
                 <div id="subjects-container" class="cards-grid"></div>
             </section>
 
-            <!-- قسم الملفات والوثائق -->
+            <!-- قسم الوثائق والملفات -->
             <section id="sec-files" class="content-section">
                 <div class="section-header">
                     <h3>📄 إدارة الوثائق والملفات الرسمية</h3>
@@ -167,7 +164,7 @@
                                 <th>نوع الملف</th>
                                 <th>التصنيف</th>
                                 <th>تاريخ الإضافة</th>
-                                <th>الإجراءات</th>
+                                <th style="text-align:center;">الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody id="files-table-body"></tbody>
@@ -175,7 +172,7 @@
                 </div>
             </section>
 
-            <!-- الحساب والإعدادات -->
+            <!-- قسم الحساب والإعدادات -->
             <section id="sec-settings" class="content-section">
                 <h3>⚙️ الحساب والإعدادات</h3>
                 <form id="settings-form">
@@ -252,15 +249,35 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; font-size:16px;">💾 حفظ كافة التغييرات</button>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; font-size:16px;">💾 حفظ كافة التغييرات وإعدادات الحساب</button>
                 </form>
             </section>
 
-            <!-- أسفل الموقع الصريح والمحدد -->
             <footer class="app-site-footer">
-                <p>المملكة المغربية — قاعدة بيانات عمر المهداوي © 2026</p>
+                <p>قاعدة بيانات عمر المهداوي © 2026</p>
             </footer>
         </main>
+
+        <!-- القائمة الجانبية باليسار اليسار دائماً -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="avatar-container">
+                    <img id="sidebar-avatar" class="avatar-circle hidden" src="" alt="الصورة الشخصية">
+                    <div id="sidebar-avatar-placeholder" class="avatar-placeholder">👤</div>
+                </div>
+                <h3 id="side-fullname">عمر المهداوي</h3>
+                <p id="side-job">طالب / مستخدم</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="home">🏠 الصفحة الرئيسية</button>
+                <button class="nav-btn" data-tab="db">📂 قاعدة البيانات</button>
+                <button class="nav-btn" data-tab="excel">📊 Excel</button>
+                <button class="nav-btn" data-tab="study">🎓 اللوحة الدراسية</button>
+                <button class="nav-btn" data-tab="files">📄 الملفات والوثائق</button>
+                <button class="nav-btn" data-tab="settings">⚙️ الحساب والإعدادات</button>
+                <button class="nav-btn danger" id="logout-btn">🚪 تسجيل الخروج</button>
+            </nav>
+        </aside>
     </div>
 
     <!-- Modals -->
@@ -283,12 +300,24 @@
                 <div class="form-group"><label>وصف مختصر</label><input type="text" id="db-desc"></div>
                 <div class="form-group"><label>المعلومات التفصيلية</label><textarea id="db-details" rows="3"></textarea></div>
                 <div class="form-group"><label>التاريخ</label><input type="date" id="db-date" required></div>
-                <div class="form-group"><label>الملف المرفق من الجهاز</label><input type="file" id="db-file-input"></div>
+                <div class="form-group"><label>رفع وتحميل الملف المرفق من جهازك</label><input type="file" id="db-file-input"></div>
                 <div class="modal-actions">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('add-db-modal')">إلغاء</button>
                     <button type="submit" class="btn btn-primary">حفظ السجل</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="view-modal" class="modal">
+        <div class="modal-content" style="max-width:850px; height:85vh; display:flex; flex-direction:column;">
+            <h3 id="view-title">🔍 معاينة وفتح المستند</h3>
+            <div id="view-body" style="margin: 10px 0; font-size: 14px;"></div>
+            <div id="file-preview-area" style="flex:1; border:1px solid #ccc; border-radius:8px; background:#1e293b; overflow:hidden; display:flex; justify-content:center; align-items:center;"></div>
+            <div class="modal-actions" style="margin-top:15px;">
+                <a id="file-download-link" href="#" target="_blank" class="btn btn-primary" style="display:none; text-decoration:none;">↗ فتح في تبويب جديد / تحميل</a>
+                <button type="button" class="btn btn-secondary" onclick="closeModal('view-modal')">إغلاق</button>
+            </div>
         </div>
     </div>
 
@@ -352,9 +381,6 @@
             </div>
         </div>
     </div>
-
-    <!-- حاوية طباعة التقارير (مخفية بشكل مطلق من العرض العادي) -->
-    <div id="print-container"></div>
 
     <script src="script.js"></script>
 </body>
